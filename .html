@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Voz no Underground • Zine</title>
+  <style>
+    :root{
+      --bg:#0b0c10;
+      --panel:rgba(255,255,255,.06);
+      --panel2:rgba(255,255,255,.09);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.62);
+      --stroke:rgba(255,255,255,.12);
+      --accent:#7CFF6B;
+      --shadow:0 16px 50px rgba(0,0,0,.45);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 20% -10%, rgba(124,255,107,.10), transparent 60%),
+        radial-gradient(900px 700px at 100% 10%, rgba(124,255,107,.08), transparent 55%),
+        radial-gradient(900px 700px at 10% 110%, rgba(255,255,255,.05), transparent 60%),
+        var(--bg);
+    }
+    a{color:inherit;text-decoration:none}
+    .muted{color:var(--muted)}
+    .small{font-size:12px}
+    .strong{font-weight:800}
+
+    .header{
+      position:sticky;top:0;z-index:10;
+      backdrop-filter:blur(14px);
+      background:linear-gradient(to bottom, rgba(11,12,16,.88), rgba(11,12,16,.55));
+      border-bottom:1px solid var(--stroke);
+      padding:18px 22px;
+      display:flex;gap:16px;align-items:center;justify-content:space-between;
+    }
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{
+      width:42px;height:42px;display:grid;place-items:center;
+      border:1px solid var(--stroke);border-radius:14px;
+      background:rgba(255,255,255,.06);box-shadow:var(--shadow);
+      font-weight:900;
+    }
+    h1{margin:0;font-size:18px;letter-spacing:.2px}
+    .subtitle{margin:2px 0 0;font-size:12px;color:var(--muted)}
+    .actions{display:flex;gap:10px;align-items:center}
+    .search{
+      width:min(420px, 52vw);
+      padding:10px 12px;border-radius:14px;border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);color:var(--text);outline:none;
+    }
+    .search::placeholder{color:rgba(255,255,255,.45)}
+    .btn{
+      padding:10px 12px;border-radius:14px;border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);color:var(--text);
+      cursor:pointer;transition:transform .12s ease, background .12s ease;
+      user-select:none;
+    }
+    .btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.09)}
+    .btn.primary{border-color:rgba(124,255,107,.35);background:rgba(124,255,107,.12)}
+    .btn.primary:hover{background:rgba(124,255,107,.18)}
+    .btn.ghost{background:transparent}
+    .main{padding:22px;max-width:1200px;margin:0 auto}
+    .hero{
+      display:grid;grid-template-columns:1.3fr .7fr;gap:16px;margin-top:8px;
+    }
+    .hero-card{
+      border:1px solid var(--stroke);
+      background:linear-gradient(180deg,var(--panel), rgba(255,255,255,.03));
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:var(--shadow);
+    }
+    .kicker{
+      font-size:11px;letter-spacing:.18em;color:rgba(124,255,107,.85);
+      margin:0 0 10px;
+    }
+    .hero-card h2{margin:0 0 10px;font-size:30px;line-height:1.08}
+    .lead{margin:0 0 16px;color:var(--muted);max-width:64ch}
+    .hero-cta{display:flex;gap:10px;flex-wrap:wrap}
+    .hero-side{display:flex;flex-direction:column;gap:12px}
+    .mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .stat{
+      border:1px solid var(--stroke);background:var(--panel);
+      border-radius:var(--radius);padding:14px;
+    }
+    .stat-value{font-weight:900;font-size:18px}
+    .stat-label{font-size:12px;color:var(--muted);margin-top:3px}
+    .note{
+      border:1px solid var(--stroke);background:var(--panel);
+      border-radius:var(--radius);padding:14px;
+    }
+    .section{margin-top:18px}
+    .section-head{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:12px;margin:14px 2px;
+    }
+    .section-head h3{margin:0;font-size:16px}
+    .filters{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.04);
+      color:var(--muted);
+      padding:8px 10px;border-radius:999px;cursor:pointer;
+      transition:.12s ease;
+    }
+    .chip:hover{background:rgba(255,255,255,.07);color:var(--text)}
+    .chip.active{
+      background:rgba(124,255,107,.12);
+      border-color:rgba(124,255,107,.35);
+      color:var(--text);
+    }
+    .grid{
+      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:14px;
+    }
+    @media (max-width:1060px){ .grid{grid-template-columns:repeat(3,1fr)} .hero{grid-template-columns:1fr} }
+    @media (max-width:760px){ .grid{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:480px){ .grid{grid-template-columns:1fr} .search{width:52vw} }
+    .card{
+      border:1px solid var(--stroke);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border-radius:var(--radius);
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      transition:transform .12s ease, border-color .12s ease;
+      display:flex;flex-direction:column;
+    }
+    .card:hover{transform:translateY(-2px);border-color:rgba(124,255,107,.25)}
+    .cover{aspect-ratio:4/5;width:100%;object-fit:cover;filter:contrast(1.02) saturate(1.02)}
+    .card-body{padding:12px 12px 14px;display:flex;flex-direction:column;gap:8px}
+    .badge{display:inline-flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);flex-wrap:wrap}
+    .dot{width:8px;height:8px;border-radius:999px;background:rgba(124,255,107,.85);box-shadow:0 0 16px rgba(124,255,107,.25)}
+    .card-title{font-weight:900;font-size:14px;line-height:1.15}
+    .card-summary{font-size:12px;color:var(--muted);line-height:1.35}
+    .footer{
+      padding:24px 22px;border-top:1px solid var(--stroke);
+      color:var(--muted);text-align:center;
+    }
+
+    /* Reader modal */
+    .modal{
+      position:fixed;inset:0;display:none;z-index:9999;
+      background:rgba(0,0,0,.65);
+      backdrop-filter: blur(10px);
+    }
+    .modal.open{display:block}
+    .modal-card{
+      position:absolute;inset:18px;
+      border:1px solid var(--stroke);
+      border-radius:22px;
+      background:rgba(11,12,16,.82);
+      box-shadow:0 30px 90px rgba(0,0,0,.65);
+      overflow:hidden;
+      display:flex;flex-direction:column;
+    }
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:14px 14px;
+      border-bottom:1px solid var(--stroke);
+      background:linear-gradient(to bottom, rgba(11,12,16,.92), rgba(11,12,16,.72));
+    }
+    .topbar .title{display:flex;flex-direction:column;gap:2px;min-width:0}
+    .topbar .title .t1{font-size:12px;color:var(--muted)}
+    .topbar .title .t2{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52vw}
+    .topbar .right{display:flex;gap:10px;align-items:center}
+    .frame{
+      width:100%;
+      height:100%;
+      border:none;
+      background:#111;
+      flex:1;
+    }
+    .hint{
+      font-size:12px;color:var(--muted);
+      padding:10px 14px;border-top:1px solid var(--stroke);
+      background:rgba(255,255,255,.03);
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header">
+    <div class="brand">
+      <div class="logo">V</div>
+      <div>
+        <h1>Voz no Underground</h1>
+        <p class="subtitle">zine digital • ruído com propósito • Recife/Olinda</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <input id="search" class="search" placeholder="Buscar edição, tema, palavra..." />
+      <button id="btnNew" class="btn ghost" type="button">Nova edição</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="hero">
+      <div class="hero-card">
+        <p class="kicker">MODERNO • INTIMISTA • DIRETO</p>
+        <h2>Leia como revista. Sem distração. Só conteúdo.</h2>
+        <p class="lead">
+          Um lugar pra cena respirar. Capas, edições e arquivo — e um clique te joga no leitor.
+          Simples pra você publicar, fluido pra galera consumir.
+        </p>
+        <div class="hero-cta">
+          <button id="btnLatest" class="btn primary" type="button">Ler a mais recente</button>
+          <button id="btnArchive" class="btn" type="button">Ver arquivo</button>
+        </div>
+      </div>
+
+      <div class="hero-side">
+        <div class="mini-stats">
+          <div class="stat">
+            <div class="stat-value" id="statCount">—</div>
+            <div class="stat-label">edições</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">PDF</div>
+            <div class="stat-label">formato zine</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">1 click</div>
+            <div class="stat-label">pra ler</div>
+          </div>
+        </div>
+
+        <div class="note">
+          <p><strong>Curadoria:</strong> você dita o tom. O site só entrega.</p>
+          <p class="muted">Dica: capa forte + uma frase boa. O resto é página virando.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h3>Edições</h3>
+        <div class="filters">
+          <button class="chip active" data-filter="all" type="button">Tudo</button>
+          <button class="chip" data-filter="Nova edição" type="button">Nova edição</button>
+          <button class="chip" data-filter="Arquivo" type="button">Arquivo</button>
+        </div>
+      </div>
+
+      <div id="grid" class="grid"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> Voz no Underground • feito pra cena, não pra algoritmo.</p>
+  </footer>
+
+  <!-- Reader Modal -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="topbar">
+        <button id="btnClose" class="btn ghost" type="button">← Voltar</button>
+        <div class="title">
+          <div class="t1 muted small">Leitor</div>
+          <div id="modalTitle" class="t2">—</div>
+        </div>
+        <div class="right">
+          <a id="btnOpenTab" class="btn" href="#" target="_blank" rel="noreferrer">Abrir em outra aba</a>
+          <a id="btnDownload" class="btn primary" href="#" download>Baixar PDF</a>
+        </div>
+      </div>
+      <iframe id="pdfFrame" class="frame" title="Leitor de PDF"></iframe>
+      <div class="hint">
+        Se o PDF não renderizar aqui (depende do navegador/permite CORS), use <strong>“Abrir em outra aba”</strong>.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ✅ DADOS (troque aqui pelos seus PDFs/capas quando quiser)
+    // Dica: para PDFs próprios, use links públicos (ex: hospedado no seu domínio, S3, ou Drive com link direto).
+    const ZINES = [
+      {
+        id: "001",
+        title: "Voz no Underground #001",
+        tag: "Nova edição",
+        date: "2026-02-10",
+        cover: "https://picsum.photos/seed/underground001/800/1000",
+        // PDF público de teste:
+        pdf: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        summary: "Recife no osso. Cena, rua, suor e ruído. Entrevistas + manifesto curto."
+      },
+      {
+        id: "002",
+        title: "Voz no Underground #002",
+        tag: "Arquivo",
+        date: "2026-01-15",
+        cover: "https://picsum.photos/seed/underground002/800/1000",
+        pdf: "https://www.africau.edu/images/default/sample.pdf",
+        summary: "Especial: estúdios caseiros, fita isolante, e a arte de terminar som na marra."
+      },
+      {
+        id: "003",
+        title: "Voz no Underground #003",
+        tag: "Nova edição",
+        date: "2025-12-20",
+        cover: "https://picsum.photos/seed/underground003/800/1000",
+        pdf: "https://unec.edu.az/application/uploads/2014/12/pdf-sample.pdf",
+        summary: "Riffs, resenhas e resistência. Tudo junto, misturado e verdadeiro."
+      },
+      {
+        id: "004",
+        title: "Hardcore Especial (piloto)",
+        tag: "Arquivo",
+        date: "2025-10-02",
+        cover: "https://picsum.photos/seed/underground004/800/1000",
+        pdf: "https://www.orimi.com/pdf-test.pdf",
+        summary: "Edição teste: energia crua, sem filtro, e a pergunta que dói: pra quem a gente toca?"
+      }
+    ];
+
+    const grid = document.getElementById("grid");
+    const search = document.getElementById("search");
+    const year = document.getElementById("year");
+    const statCount = document.getElementById("statCount");
+
+    const btnLatest = document.getElementById("btnLatest");
+    const btnArchive = document.getElementById("btnArchive");
+    const btnNew = document.getElementById("btnNew");
+
+    const modal = document.getElementById("modal");
+    const btnClose = document.getElementById("btnClose");
+    const modalTitle = document.getElementById("modalTitle");
+    const pdfFrame = document.getElementById("pdfFrame");
+    const btnDownload = document.getElementById("btnDownload");
+    const btnOpenTab = document.getElementById("btnOpenTab");
+
+    let zines = [...ZINES];
+    let currentFilter = "all";
+
+    year.textContent = new Date().getFullYear();
+
+    function parseDateISO(s){
+      const [y,m,d] = s.split("-").map(Number);
+      return new Date(y, m-1, d);
+    }
+    function sortByNewest(arr){
+      return [...arr].sort((a,b) => parseDateISO(b.date) - parseDateISO(a.date));
+    }
+    function formatDateBr(iso){
+      const dt = parseDateISO(iso);
+      return dt.toLocaleDateString("pt-BR", { year:"numeric", month:"short", day:"2-digit" });
+    }
+
+    function openReader(z){
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+      modalTitle.textContent = z.title;
+
+      // Tenta renderizar direto no iframe (funciona bem quando o host permite).
+      pdfFrame.src = z.pdf;
+
+      btnDownload.href = z.pdf;
+      btnOpenTab.href = z.pdf;
+
+      // UX: bloqueia scroll do fundo
+      document.body.style.overflow = "hidden";
+    }
+    function closeReader(){
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      pdfFrame.src = "about:blank";
+      document.body.style.overflow = "";
+    }
+
+    function render(list){
+      grid.innerHTML = "";
+      const frag = document.createDocumentFragment();
+
+      list.forEach(z => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.tabIndex = 0;
+        card.addEventListener("click", () => openReader(z));
+        card.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") openReader(z);
+        });
+
+        card.innerHTML = `
+          <img class="cover" src="${z.cover}" alt="Capa ${z.title}">
+          <div class="card-body">
+            <div class="badge">
+              <span class="dot"></span>
+              <span>${z.tag}</span>
+              <span>•</span>
+              <span>${formatDateBr(z.date)}</span>
+            </div>
+            <div class="card-title">${z.title}</div>
+            <div class="card-summary">${z.summary || ""}</div>
+          </div>
+        `;
+        frag.appendChild(card);
+      });
+
+      grid.appendChild(frag);
+    }
+
+    function applyFilters(){
+      const q = (search?.value || "").trim().toLowerCase();
+      let list = zines;
+
+      if (currentFilter !== "all") {
+        list = list.filter(z => (z.tag || "").toLowerCase() === currentFilter.toLowerCase());
+      }
+      if (q) {
+        list = list.filter(z => {
+          const hay = `${z.title} ${z.summary} ${z.tag} ${z.date}`.toLowerCase();
+          return hay.includes(q);
+        });
+      }
+      render(sortByNewest(list));
+    }
+
+    function init(){
+      statCount.textContent = String(zines.length);
+
+      document.querySelectorAll(".chip").forEach(chip => {
+        chip.addEventListener("click", () => {
+          document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+          chip.classList.add("active");
+          currentFilter = chip.dataset.filter;
+          applyFilters();
+        });
+      });
+
+      search?.addEventListener("input", applyFilters);
+
+      btnLatest?.addEventListener("click", () => {
+        const latest = sortByNewest(zines)[0];
+        if (latest) openReader(latest);
+      });
+
+      btnArchive?.addEventListener("click", () => {
+        currentFilter = "Arquivo";
+        document.querySelectorAll(".chip").forEach(c => {
+          c.classList.toggle("active", c.dataset.filter === "Arquivo");
+        });
+        applyFilters();
+        window.scrollTo({ top: document.body.scrollHeight * 0.25, behavior: "smooth" });
+      });
+
+      btnNew?.addEventListener("click", () => {
+        currentFilter = "Nova edição";
+        document.querySelectorAll(".chip").forEach(c => {
+          c.classList.toggle("active", c.dataset.filter === "Nova edição");
+        });
+        applyFilters();
+        window.scrollTo({ top: document.body.scrollHeight * 0.25, behavior: "smooth" });
+      });
+
+      // Modal controls
+      btnClose.addEventListener("click", closeReader);
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeReader();
+      });
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && modal.classList.contains("open")) closeReader();
+      });
+
+      applyFilters();
+    }
+
+    init();
+  </script>
+</body>
+</html>
